@@ -1,6 +1,7 @@
 name: Build Calibre AppImage Release
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "**" # Trigger on push to any branch

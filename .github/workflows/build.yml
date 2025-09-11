@@ -77,9 +77,17 @@ jobs:
           # Make the desktop file executable
           chmod +x build/calibre.AppDir/calibre.desktop
 
-          # Download AppRun (runtime for the AppImage)
-          # Using a specific release tag for stability
-          curl --location -o build/calibre.AppDir/AppRun https://github.com/AppImage/appimagetool/releases/download/continuous/AppRun-x86_64
+          # Create AppRun script manually
+          cat > build/calibre.AppDir/AppRun << 'EOF'
+#!/bin/bash
+
+export APPDIR="$(dirname "$(readlink -f "$0")")"
+export PATH="$APPDIR/usr/bin/:$PATH"
+export LD_LIBRARY_PATH="$APPDIR/usr/lib:$LD_LIBRARY_PATH"
+export XDG_DATA_DIRS="$APPDIR/usr/share/:/usr/share/:$XDG_DATA_DIRS"
+
+"$APPDIR"/usr/bin/calibre $@
+EOF
           chmod +x build/calibre.AppDir/AppRun
 
           # Create the usr/bin directory inside the AppDir
